@@ -41,6 +41,10 @@ func main() {
 
 	app.Put("/addStudent", studentHandler.Add)
 
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Sever is running")
+	})
+
 	port := os.Getenv("PORT")
 	app.Listen(port)
 	fmt.Println("Server is running on port", port)
