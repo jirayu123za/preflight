@@ -46,7 +46,7 @@ func main() {
 	})
 
 	port := os.Getenv("PORT")
-	app.Listen(port)
+	app.Listen(":" + port)
 	fmt.Println("Server is running on port", port)
 }
 
