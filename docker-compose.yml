@@ -19,7 +19,7 @@ services:
     networks:
       - preflight_pf-net
     environment:
-      - DATABASE_DSN = ${DATABASE_DSN}
+      - DATABASE_DSN=${DATABASE_DSN}
 networks:
   preflight_pf-net: # Check by using `docker network ls` command
     external: true
