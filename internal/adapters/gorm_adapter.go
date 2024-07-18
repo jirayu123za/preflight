@@ -26,6 +26,15 @@ func (r *GormStudentRepository) SaveStudent(student *models.Student) error {
 	return nil
 }
 
+func (r *GormStudentRepository) FindStudentByStudentId(studentID string) (*models.Student, error) {
+	// Implement the logic to find a student by studentID from the database using GORM.
+	var student models.Student
+	if result := r.db.First(&student, "student_id = ?", studentID); result.Error != nil {
+		return nil, result.Error
+	}
+	return &student, nil
+}
+
 func (r *GormStudentRepository) FindAllStudents() ([]models.Student, error) {
 	// Implement the logic to Find all students from the database using GORM.
 	var students []models.Student

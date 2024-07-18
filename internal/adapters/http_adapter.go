@@ -43,3 +43,17 @@ func (h *HttpStudentHandler) QueryStudents(c *fiber.Ctx) error {
 
 	return c.JSON(students)
 }
+
+func (h *HttpStudentHandler) QueryStudentByID(c *fiber.Ctx) error {
+	// Implement the logic to Query a student by ID to the database using GORM.
+	studentID := c.Query("student_id")
+
+	student, err := h.services.QueryStudentByID(studentID)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(student)
+}

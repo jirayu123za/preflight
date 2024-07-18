@@ -8,7 +8,9 @@ import (
 // Primary port
 type StudentService interface {
 	CreateStudent(student *models.Student) error
+	QueryStudentByID(studentID string) (*models.Student, error)
 	QueryStudents() ([]models.Student, error)
+	//UpdateStudent(student *models.Student) error
 }
 
 type StudentServiceImpl struct {
@@ -28,6 +30,15 @@ func (s *StudentServiceImpl) CreateStudent(student *models.Student) error {
 		return err
 	}
 	return nil
+}
+
+func (s *StudentServiceImpl) QueryStudentByID(studentID string) (*models.Student, error) {
+	// business logic
+	student, err := s.repo.FindStudentByStudentId(studentID)
+	if err != nil {
+		return nil, err
+	}
+	return student, nil
 }
 
 func (s *StudentServiceImpl) QueryStudents() ([]models.Student, error) {
