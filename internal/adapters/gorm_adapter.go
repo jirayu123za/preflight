@@ -44,9 +44,18 @@ func (r *GormStudentRepository) FindAllStudents() ([]models.Student, error) {
 	return students, nil
 }
 
-func (r *GormStudentRepository) UpdateStudent(student *models.Student) error {
-	// Implement the logic to update a student in the database using GORM.
-	if result := r.db.Save(&student); result.Error != nil {
+func (r *GormStudentRepository) ModifyStudent(student *models.Student) error {
+	// Implement the logic to Modify a student in the database using GORM.
+	var existingStudent models.Student
+	if result := r.db.First(&existingStudent, "student_id = ?", student.StudentID); result.Error != nil {
+		return result.Error
+	}
+
+	existingStudent.FirstName = student.FirstName
+	existingStudent.LastName = student.LastName
+	existingStudent.Email = student.Email
+
+	if result := r.db.Save(&existingStudent); result.Error != nil {
 		return result.Error
 	}
 	return nil

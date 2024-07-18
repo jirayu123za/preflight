@@ -10,7 +10,7 @@ type StudentService interface {
 	CreateStudent(student *models.Student) error
 	QueryStudentByID(studentID string) (*models.Student, error)
 	QueryStudents() ([]models.Student, error)
-	//UpdateStudent(student *models.Student) error
+	UpdateStudent(student *models.Student) error
 }
 
 type StudentServiceImpl struct {
@@ -48,4 +48,21 @@ func (s *StudentServiceImpl) QueryStudents() ([]models.Student, error) {
 		return nil, err
 	}
 	return students, nil
+}
+
+func (s *StudentServiceImpl) UpdateStudent(student *models.Student) error {
+	// business logic
+	existingStudent, err := s.repo.FindStudentByStudentId(student.StudentID)
+	if err != nil {
+		return err
+	}
+
+	existingStudent.FirstName = student.FirstName
+	existingStudent.LastName = student.LastName
+	existingStudent.Email = student.Email
+
+	if err := s.repo.ModifyStudent(existingStudent); err != nil {
+		return err
+	}
+	return nil
 }

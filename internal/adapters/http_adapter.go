@@ -41,7 +41,7 @@ func (h *HttpStudentHandler) QueryStudents(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(students)
+	return c.Status(fiber.StatusOK).JSON(students)
 }
 
 func (h *HttpStudentHandler) QueryStudentByID(c *fiber.Ctx) error {
@@ -55,5 +55,26 @@ func (h *HttpStudentHandler) QueryStudentByID(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(student)
+	return c.Status(fiber.StatusOK).JSON(student)
+}
+
+func (h *HttpStudentHandler) UpdateStudent(c *fiber.Ctx) error {
+	// Implement the logic to update a student to the database using GORM.
+	student := new(models.Student)
+	if err := c.BodyParser(&student); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
+	}
+
+	if student.StudentID == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Student ID is required"})
+	}
+
+	err := h.services.UpdateStudent(student)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(student)
 }
