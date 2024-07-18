@@ -1,22 +1,29 @@
 package services
 
-import "preflight/internal/core/ports"
+import (
+	"preflight/internal/core/repositories"
+	"preflight/internal/models"
+)
 
-type StudentService struct {
-	studentRepository ports.StudentRepository
+// Primary port
+type StudentService interface {
+	CreateStudent(student *models.Student) error
 }
 
-var _ ports.StudentService = (*StudentService)(nil)
+type StudentServiceImpl struct {
+	repo repositories.StudentRepository
+}
 
-func NewStudentService(repository ports.StudentRepository) *StudentService {
-	return &StudentService{
-		studentRepository: repository,
+// func instance business logic call
+func NewStudentService(repo repositories.StudentRepository) StudentService {
+	return &StudentServiceImpl{
+		repo: repo,
 	}
 }
 
-func (s *StudentService) Add(studentID int, firstName string, lastName string, email string) error {
-	err := s.studentRepository.Add(studentID, firstName, lastName, email)
-	if err != nil {
+func (s *StudentServiceImpl) CreateStudent(student *models.Student) error {
+	// business logic
+	if err := s.repo.SaveStudent(student); err != nil {
 		return err
 	}
 	return nil

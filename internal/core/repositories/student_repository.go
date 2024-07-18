@@ -2,10 +2,11 @@ package repositories
 
 import "preflight/internal/models"
 
+// Secondary port
 type StudentRepository interface {
-	CreateStudent(student *models.Student) error
-	GetStudentByStudentId(student *models.Student) (*models.Student, error)
-	GetAllStudents() ([]models.Student, error)
+	SaveStudent(student *models.Student) error
+	FindStudentByStudentId(student *models.Student) (*models.Student, error)
+	FindAllStudents() ([]models.Student, error)
 	UpdateStudent(student *models.Student) error
 	DeleteStudent(student *models.Student) error
 }

@@ -39,7 +39,7 @@ func main() {
 	studentService := services.NewStudentService(studentRepo)
 	studentHandler := adapters.NewHttpStudentHandler(studentService)
 
-	app.Put("/addStudent", studentHandler.Add)
+	app.Put("/CreateStudent", studentHandler.CreateStudent)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Sever is running")
