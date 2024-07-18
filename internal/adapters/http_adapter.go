@@ -31,3 +31,15 @@ func (h *HttpStudentHandler) CreateStudent(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusCreated).JSON(student)
 }
+
+func (h *HttpStudentHandler) QueryStudents(c *fiber.Ctx) error {
+	// Implement the logic to Query all students to the database using GORM.
+	students, err := h.services.QueryStudents()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(students)
+}

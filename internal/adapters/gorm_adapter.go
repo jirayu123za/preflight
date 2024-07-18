@@ -26,29 +26,13 @@ func (r *GormStudentRepository) SaveStudent(student *models.Student) error {
 	return nil
 }
 
-func convertToStudentSlice(students []*models.Student) []models.Student {
-	converted := make([]models.Student, len(students))
-	for i, student := range students {
-		converted[i] = *student
-	}
-	return converted
-}
-
 func (r *GormStudentRepository) FindAllStudents() ([]models.Student, error) {
 	// Implement the logic to Find all students from the database using GORM.
-	var students []*models.Student
+	var students []models.Student
 	if result := r.db.Find(&students); result.Error != nil {
 		return nil, result.Error
 	}
-	return convertToStudentSlice(students), nil
-}
-
-func (r *GormStudentRepository) FindStudentByStudentId(student *models.Student) (*models.Student, error) {
-	// Implement the logic to Find a student by student id from the database using GORM.
-	if result := r.db.First(&student, student.StudentID); result.Error != nil {
-		return nil, result.Error
-	}
-	return student, nil
+	return students, nil
 }
 
 func (r *GormStudentRepository) UpdateStudent(student *models.Student) error {
