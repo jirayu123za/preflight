@@ -8,5 +8,5 @@ type StudentRepository interface {
 	FindStudentByStudentId(studentID string) (*models.Student, error)
 	FindAllStudents() ([]models.Student, error)
 	ModifyStudent(student *models.Student) error
-	DeleteStudent(student *models.Student) error
+	RemoveStudent(student *models.Student) error
 }

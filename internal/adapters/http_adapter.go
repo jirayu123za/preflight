@@ -78,3 +78,32 @@ func (h *HttpStudentHandler) UpdateStudent(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(student)
 }
+
+func (h *HttpStudentHandler) DeleteStudent(c *fiber.Ctx) error {
+	// Implement the logic to delete a student to the database using GORM.
+	studentID := c.Query("student_id")
+
+	if studentID == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Student ID is required",
+		})
+	}
+
+	student, err := h.services.QueryStudentByID(studentID)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": "Student not found",
+		})
+	}
+
+	err = h.services.DeleteStudent(student)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Student deleted successfully",
+	})
+}

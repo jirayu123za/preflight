@@ -61,9 +61,14 @@ func (r *GormStudentRepository) ModifyStudent(student *models.Student) error {
 	return nil
 }
 
-func (r *GormStudentRepository) DeleteStudent(student *models.Student) error {
-	// Implement the logic to delete a student from the database using GORM.
-	if result := r.db.Delete(&student); result.Error != nil {
+func (r *GormStudentRepository) RemoveStudent(student *models.Student) error {
+	// Implement the logic to Remove a student from the database using GORM.
+	var findStudent models.Student
+	if result := r.db.First(&findStudent, "student_id = ?", student.StudentID); result.Error != nil {
+		return result.Error
+	}
+
+	if result := r.db.Delete(&findStudent); result.Error != nil {
 		return result.Error
 	}
 	return nil

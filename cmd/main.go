@@ -43,6 +43,7 @@ func main() {
 	app.Get("/QueryStudents", studentHandler.QueryStudents)
 	app.Get("/QueryStudentByID", studentHandler.QueryStudentByID)
 	app.Put("/UpdateStudent", studentHandler.UpdateStudent)
+	app.Delete("/DeleteStudent", studentHandler.DeleteStudent)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Sever is running")
