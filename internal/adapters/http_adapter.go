@@ -25,11 +25,15 @@ func (h *HttpStudentHandler) CreateStudent(c *fiber.Ctx) error {
 	// Implement the logic to create a student to the database using GORM.
 	var student models.Student
 	if err := c.BodyParser(&student); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request",
+		})
 	}
 
 	if err := h.services.CreateStudent(&student); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(student)
@@ -39,12 +43,16 @@ func (h *HttpStudentHandler) UploadStudentsCSV(c *fiber.Ctx) error {
 	// Implement the logic to create multiple students from csv file to the database using GORM.
 	file, err := c.FormFile("file")
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Can't upload file"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Can't upload file",
+		})
 	}
 
 	f, err := file.Open()
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Can't open file"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Can't open file",
+		})
 	}
 	defer f.Close()
 
@@ -53,7 +61,9 @@ func (h *HttpStudentHandler) UploadStudentsCSV(c *fiber.Ctx) error {
 
 	// Skip header row
 	if _, err := reader.Read(); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Can't read CSV header row"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Can't read CSV header row",
+		})
 	}
 
 	for {
@@ -77,7 +87,9 @@ func (h *HttpStudentHandler) UploadStudentsCSV(c *fiber.Ctx) error {
 
 	err = h.services.MultiCreateStudent(students)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(students)
@@ -118,7 +130,8 @@ func (h *HttpStudentHandler) UpdateStudent(c *fiber.Ctx) error {
 	}
 
 	if student.StudentID == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Student ID is required"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Student ID is required"})
 	}
 
 	err := h.services.UpdateStudent(student)
