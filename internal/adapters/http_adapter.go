@@ -1,6 +1,9 @@
 package adapters
 
 import (
+	"encoding/csv"
+	"io"
+	"log"
 	"preflight/internal/core/services"
 	"preflight/internal/models"
 
@@ -30,6 +33,54 @@ func (h *HttpStudentHandler) CreateStudent(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(student)
+}
+
+func (h *HttpStudentHandler) UploadStudentsCSV(c *fiber.Ctx) error {
+	// Implement the logic to create multiple students from csv file to the database using GORM.
+	file, err := c.FormFile("file")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Can't upload file"})
+	}
+
+	f, err := file.Open()
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Can't open file"})
+	}
+	defer f.Close()
+
+	reader := csv.NewReader(f)
+	var students []models.Student
+
+	// Skip header row
+	if _, err := reader.Read(); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Can't read CSV header row"})
+	}
+
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatal("Error reading record:", err)
+			continue
+		}
+
+		student := models.Student{
+			StudentID: record[0],
+			FirstName: record[1],
+			LastName:  record[2],
+			Email:     record[3],
+		}
+		students = append(students, student)
+	}
+
+	err = h.services.MultiCreateStudent(students)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(students)
 }
 
 func (h *HttpStudentHandler) QueryStudents(c *fiber.Ctx) error {
@@ -62,7 +113,8 @@ func (h *HttpStudentHandler) UpdateStudent(c *fiber.Ctx) error {
 	// Implement the logic to update a student to the database using GORM.
 	student := new(models.Student)
 	if err := c.BodyParser(&student); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Cannot parse JSON"})
 	}
 
 	if student.StudentID == "" {

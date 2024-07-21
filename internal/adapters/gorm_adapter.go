@@ -26,6 +26,14 @@ func (r *GormStudentRepository) SaveStudent(student *models.Student) error {
 	return nil
 }
 
+func (r *GormStudentRepository) MultiSaveStudent(students []models.Student) error {
+	// Implement the logic to add multiple students to the database using GORM.
+	if result := r.db.Create(&students); result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
 func (r *GormStudentRepository) FindStudentByStudentId(studentID string) (*models.Student, error) {
 	// Implement the logic to find a student by studentID from the database using GORM.
 	var student models.Student

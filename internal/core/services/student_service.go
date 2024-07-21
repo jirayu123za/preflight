@@ -8,6 +8,7 @@ import (
 // Primary port
 type StudentService interface {
 	CreateStudent(student *models.Student) error
+	MultiCreateStudent(students []models.Student) error
 	QueryStudentByID(studentID string) (*models.Student, error)
 	QueryStudents() ([]models.Student, error)
 	UpdateStudent(student *models.Student) error
@@ -28,6 +29,14 @@ func NewStudentService(repo repositories.StudentRepository) StudentService {
 func (s *StudentServiceImpl) CreateStudent(student *models.Student) error {
 	// business logic
 	if err := s.repo.SaveStudent(student); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *StudentServiceImpl) MultiCreateStudent(Students []models.Student) error {
+	// business logic
+	if err := s.repo.MultiSaveStudent(Students); err != nil {
 		return err
 	}
 	return nil

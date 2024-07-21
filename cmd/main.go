@@ -40,6 +40,7 @@ func main() {
 	studentHandler := adapters.NewHttpStudentHandler(studentService)
 
 	app.Put("/CreateStudent", studentHandler.CreateStudent)
+	app.Put("/MultiCreateStudent", studentHandler.UploadStudentsCSV)
 	app.Get("/QueryStudents", studentHandler.QueryStudents)
 	app.Get("/QueryStudentByID", studentHandler.QueryStudentByID)
 	app.Put("/UpdateStudent", studentHandler.UpdateStudent)
