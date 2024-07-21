@@ -51,7 +51,9 @@ func main() {
 	})
 
 	port := os.Getenv("PORT")
-	app.Listen(":" + port)
+	if err := app.Listen(":" + port); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 	fmt.Println("Server is running on port", port)
 }
 
