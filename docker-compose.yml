@@ -25,6 +25,7 @@ services:
       - POSTGRES_APP_PASSWORD=${POSTGRES_APP_PASSWORD}
     depends_on:
       - postgres
+    image: jirayu1004za/preflight_project-backend:latest
 networks:
   preflight_pf-net: # Check by using `docker network ls` command
     external: true
